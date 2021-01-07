@@ -27,6 +27,13 @@ main:
 	; Function set (0-0-1-0-0-PD-V-H):
 	; Activate chip (PD), horizontal addressing (V), basic instruction set (H)
 
+	; Bit zero
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	lda #(COMMAND | LOW)
+	sta PORTB
+
 	; Bit one
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
@@ -35,17 +42,17 @@ main:
 	sta PORTB
 
 	; Bit two
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	; Bit three
 	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
 	lda #(COMMAND | HIGH)
+	sta PORTB
+
+	; Bit three
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	lda #(COMMAND | LOW)
 	sta PORTB
 
 	; Bit four
@@ -55,28 +62,21 @@ main:
 	lda #(COMMAND | LOW)
 	sta PORTB
 
-	; Bit five
+	; Bit five (PD)
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
 	lda #(COMMAND | LOW)
 	sta PORTB
 
-	; Bit six (PD)
+	; Bit six (V)
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
 	lda #(COMMAND | LOW)
 	sta PORTB
 
-	; Bit seven (V)
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	;Bit eight (H)
+	; Bit seven (H)
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
@@ -92,6 +92,13 @@ main:
 	; All segments on - 10
 	; Inverse video mode - 11
 
+	; Bit zero
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	lda #(COMMAND | LOW)
+	sta PORTB
+
 	; Bit one
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
@@ -114,38 +121,31 @@ main:
 	sta PORTB
 
 	; Bit four
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	; Bit five
 	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
 	lda #(COMMAND | HIGH)
 	sta PORTB
 
-	; Bit six (PD)
+	; Bit five (D)
 	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
 	lda #(COMMAND | HIGH)
 	sta PORTB
 
-	; Bit seven (V)
+	; Bit six
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
 	lda #(COMMAND | LOW)
 	sta PORTB
 
-	;Bit eight (H)
-	lda #(COMMAND | LOW | TICK)
+	; Bit seven (E)
+	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
-	lda #(COMMAND | LOW)
+	lda #(COMMAND | HIGH)
 	sta PORTB
 
 	lda #DISABLED
