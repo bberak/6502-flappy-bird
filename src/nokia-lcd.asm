@@ -19,13 +19,11 @@ main:
 	lda #%11111111
 	sta DDRB
 
-	clc
+	lda #DISABLED
+	sta PORTB
 
 	; Function set (0-0-1-0-0-PD-V-H):
 	; Power down control (PD), addressing mode (V), instruction set (H)
-
-	lda #DISABLED
-	sta PORTB
 
 	lda #(COMMAND | DISABLED)
 	sta PORTB
@@ -89,7 +87,7 @@ main:
 	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
-	lda #DISABLED
+	lda #(COMMAND | DISABLED)
 	sta PORTB
 
 
@@ -98,9 +96,6 @@ main:
 
 
 	; Write VOP (constrast) to register (1-V6-V5-V4-V3-V2-V1-V0):
-
-	lda #DISABLED
-	sta PORTB
 
 	lda #(COMMAND | DISABLED)
 	sta PORTB
@@ -164,7 +159,7 @@ main:
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	lda #DISABLED
+	lda #(COMMAND | DISABLED)
 	sta PORTB
 
 
@@ -174,9 +169,6 @@ main:
 
 	; Function set (0-0-1-0-0-PD-V-H):
 	; Power down control (PD), addressing mode (V), instruction set (H)
-
-	lda #DISABLED
-	sta PORTB
 
 	lda #(COMMAND | DISABLED)
 	sta PORTB
@@ -240,7 +232,7 @@ main:
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	lda #DISABLED
+	lda #(COMMAND | DISABLED)
 	sta PORTB
 
 
@@ -251,11 +243,8 @@ main:
 	; Display control (0-0-0-0-1-D-0-E):
 	; Display bank - 00
 	; Normal mode - 10
-	; All segments on - 10
+	; All segments on - 01
 	; Inverse video mode - 11
-
-	lda #DISABLED
-	sta PORTB
 
 	lda #(COMMAND | DISABLED)
 	sta PORTB
@@ -319,7 +308,7 @@ main:
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	lda #DISABLED
+	lda #(COMMAND | DISABLED)
 	sta PORTB
 
 
@@ -329,13 +318,10 @@ main:
 
 	; Write data to LCD RAM
 
-	lda #DISABLED
+	lda #(DATA | DISABLED)
 	sta PORTB
 
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-	lda #(COMMAND)
+	lda #(DATA)
 	sta PORTB
 
 	; DB7
@@ -394,7 +380,7 @@ main:
 	lda #(DATA | HIGH | TICK)
 	sta PORTB
 
-	lda #DISABLED
+	lda #(DATA | DISABLED)
 	sta PORTB
 	
 loop:
