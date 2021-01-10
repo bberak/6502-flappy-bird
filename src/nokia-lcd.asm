@@ -21,16 +21,17 @@ main:
 
 	clc
 
+	; Function set (0-0-1-0-0-PD-V-H):
+	; Power down control (PD), addressing mode (V), instruction set (H)
+
 	lda #DISABLED
 	sta PORTB
 
+	lda #(COMMAND | DISABLED)
+	sta PORTB
 
-
-
-
-
-	; Function set (0-0-1-0-0-PD-V-H):
-	; Power down control (PD), addressing mode (V), instruction set (H)
+	lda #(COMMAND)
+	sta PORTB
 
 	; DB7
 	lda #(COMMAND | LOW)
@@ -96,7 +97,16 @@ main:
 
 
 
-	; Write VOP to register (1-X-X-X-X-X-X-X):
+	; Write VOP (constrast) to register (1-V6-V5-V4-V3-V2-V1-V0):
+
+	lda #DISABLED
+	sta PORTB
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+	lda #(COMMAND)
+	sta PORTB
 
 	; DB7
 	lda #(COMMAND | HIGH)
@@ -105,49 +115,49 @@ main:
 	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
-	; DB6
+	; DB6 (V6)
 	lda #(COMMAND | LOW)
 	sta PORTB
 
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB5
+	; DB5 (V5)
 	lda #(COMMAND | LOW)
 	sta PORTB
 
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB4
+	; DB4 (V4)
 	lda #(COMMAND | HIGH)
 	sta PORTB
 
 	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
-	; DB3
+	; DB3 (V3)
 	lda #(COMMAND | LOW)
 	sta PORTB
 
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB2
+	; DB2 (V2)
 	lda #(COMMAND | LOW)
 	sta PORTB
 
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB1
+	; DB1 (V1)
 	lda #(COMMAND | LOW)
 	sta PORTB
 
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB0
+	; DB0 (V0)
 	lda #(COMMAND | LOW)
 	sta PORTB
 
@@ -164,6 +174,15 @@ main:
 
 	; Function set (0-0-1-0-0-PD-V-H):
 	; Power down control (PD), addressing mode (V), instruction set (H)
+
+	lda #DISABLED
+	sta PORTB
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+	lda #(COMMAND)
+	sta PORTB
 
 	; DB7
 	lda #(COMMAND | LOW)
@@ -235,6 +254,15 @@ main:
 	; All segments on - 10
 	; Inverse video mode - 11
 
+	lda #DISABLED
+	sta PORTB
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+	lda #(COMMAND)
+	sta PORTB
+
 	; DB7
 	lda #(COMMAND | LOW)
 	sta PORTB
@@ -301,6 +329,15 @@ main:
 
 	; Write data to LCD RAM
 
+	lda #DISABLED
+	sta PORTB
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+	lda #(COMMAND)
+	sta PORTB
+
 	; DB7
 	lda #(DATA | LOW)
 	sta PORTB
@@ -361,12 +398,6 @@ main:
 	sta PORTB
 	
 loop:
-	;lda #DISABLED
-	;sta PORTB
-
-	;lda #(DISABLED | TICK)
-	;sta PORTB
-
 	jmp loop	
 
 *=$fffc
