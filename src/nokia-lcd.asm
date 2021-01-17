@@ -22,8 +22,22 @@ main:
 	lda #DISABLED
 	sta PORTB
 
-	; Function set (0-0-1-0-0-PD-V-H):
-	; Power down control (PD), addressing mode (V), instruction set (H)
+	; LcdWrite(LCD_C, 0x21 );  // LCD Extended Commands. %00100001
+	; LcdWrite(LCD_C, 0xB5 );  // Set LCD Vop (Contrast). %10110101
+	; LcdWrite(LCD_C, 0x14 );  // LCD bias mode 1:48. %00010100
+	; LcdWrite(LCD_C, 0x20 );  // LCD Basic Commands. %00100001
+	; LcdWrite(LCD_C, 0x0C );  // Display control. %00001100
+
+	; LcdWrite(LCD_D, 0xFF);
+	; LcdWrite(LCD_D, 0xF0);
+	; LcdWrite(LCD_D, 0x0F);
+
+
+
+
+
+
+	; COMMAND %00100001 (Extended Instruction Set)
 
 	lda #(COMMAND | DISABLED)
 	sta PORTB
@@ -66,22 +80,22 @@ main:
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB2 (PD)
-	lda #(COMMAND | LOW) ; Activate chip
+	; DB2
+	lda #(COMMAND | LOW)
 	sta PORTB
 
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB1 (V)
-	lda #(COMMAND | LOW) ; Horizontal addressing
+	; DB1
+	lda #(COMMAND | LOW)
 	sta PORTB
 
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB0 (H)
-	lda #(COMMAND | HIGH) ; Extended instruction set
+	; DB0
+	lda #(COMMAND | HIGH)
 	sta PORTB
 
 	lda #(COMMAND | HIGH | TICK)
@@ -95,7 +109,7 @@ main:
 
 
 
-	; Write VOP (constrast) to register (1-V6-V5-V4-V3-V2-V1-V0):
+	; COMMAND %10110101 (Contrast)
 
 	lda #(COMMAND | DISABLED)
 	sta PORTB
@@ -108,79 +122,6 @@ main:
 	sta PORTB
 
 	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB6 (V6)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB5 (V5)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB4 (V4)
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB3 (V3)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB2 (V2)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB1 (V1)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB0 (V0)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-
-
-
-
-
-	; Function set (0-0-1-0-0-PD-V-H):
-	; Power down control (PD), addressing mode (V), instruction set (H)
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-	lda #(COMMAND)
-	sta PORTB
-
-	; DB7
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
 	; DB6
@@ -198,96 +139,20 @@ main:
 	sta PORTB
 
 	; DB4
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB2 (PD)
-	lda #(COMMAND | LOW) ; Activate chip
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB1 (V)
-	lda #(COMMAND | LOW) ; Horizontal addressing
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB0 (H)
-	lda #(COMMAND | LOW) ; Basic instruction set
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-
-
-
-
-
-	; Display control (0-0-0-0-1-D-0-E):
-	; Display bank - 00
-	; Normal mode - 10
-	; All segments on - 01
-	; Inverse video mode - 11
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-	lda #(COMMAND)
-	sta PORTB
-
-	; DB7
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB3
 	lda #(COMMAND | HIGH)
 	sta PORTB
 
 	lda #(COMMAND | HIGH | TICK)
 	sta PORTB
 
-	; DB2 (D)
+	; DB3
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB2
 	lda #(COMMAND | HIGH)
 	sta PORTB
 
@@ -301,7 +166,79 @@ main:
 	lda #(COMMAND | LOW | TICK)
 	sta PORTB
 
-	; DB0 (E)
+	; DB0
+	lda #(COMMAND | HIGH)
+	sta PORTB
+
+	lda #(COMMAND | HIGH | TICK)
+	sta PORTB
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+
+
+
+
+
+	; COMMAND %00010100 (Bias)
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+	lda #(COMMAND)
+	sta PORTB
+
+	; DB7
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB6
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB5
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB4
+	lda #(COMMAND | HIGH)
+	sta PORTB
+
+	lda #(COMMAND | HIGH | TICK)
+	sta PORTB
+
+	; DB3
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB2
+	lda #(COMMAND | HIGH)
+	sta PORTB
+
+	lda #(COMMAND | HIGH | TICK)
+	sta PORTB
+
+	; DB1
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB0
 	lda #(COMMAND | LOW)
 	sta PORTB
 
@@ -316,7 +253,151 @@ main:
 
 
 
-	; Write data to LCD RAM
+	; COMMAND %00100000 (Basic Instruction Set)
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+	lda #(COMMAND)
+	sta PORTB
+
+	; DB7
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB6
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB5
+	lda #(COMMAND | HIGH)
+	sta PORTB
+
+	lda #(COMMAND | HIGH | TICK)
+	sta PORTB
+
+	; DB4
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB3
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB2 (PD)
+	lda #(COMMAND | LOW) 
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB1 (V)
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB0 (H)
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+
+
+
+
+
+	; COMMAND %00001100 (Display Control)
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+	lda #(COMMAND)
+	sta PORTB
+
+	; DB7
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB6
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB5
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB4
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB3
+	lda #(COMMAND | HIGH)
+	sta PORTB
+
+	lda #(COMMAND | HIGH | TICK)
+	sta PORTB
+
+	; DB2
+	lda #(COMMAND | HIGH)
+	sta PORTB
+
+	lda #(COMMAND | HIGH | TICK)
+	sta PORTB
+
+	; DB1
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	; DB0
+	lda #(COMMAND | LOW)
+	sta PORTB
+
+	lda #(COMMAND | LOW | TICK)
+	sta PORTB
+
+	lda #(COMMAND | DISABLED)
+	sta PORTB
+
+
+
+
+
+
+	; DATA
 
 	lda #(DATA | DISABLED)
 	sta PORTB
@@ -325,24 +406,96 @@ main:
 	sta PORTB
 
 	; DB7
-	lda #(DATA | LOW)
+	lda #(DATA | HIGH)
 	sta PORTB
 
-	lda #(DATA | LOW | TICK)
+	lda #(DATA | HIGH | TICK)
 	sta PORTB
 
 	; DB6
-	lda #(DATA | LOW)
+	lda #(DATA | HIGH)
 	sta PORTB
 
-	lda #(DATA | LOW | TICK)
+	lda #(DATA | HIGH | TICK)
 	sta PORTB
 
 	; DB5
-	lda #(DATA | LOW)
+	lda #(DATA | HIGH)
 	sta PORTB
 
-	lda #(DATA | LOW | TICK)
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	; DB4
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	; DB3
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	; DB2
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	; DB1
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	; DB0
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	lda #(DATA | DISABLED)
+	sta PORTB
+
+
+
+
+
+
+	; DATA
+
+	lda #(DATA | DISABLED)
+	sta PORTB
+
+	lda #(DATA)
+	sta PORTB
+
+	; DB7
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	; DB6
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
+	sta PORTB
+
+	; DB5
+	lda #(DATA | HIGH)
+	sta PORTB
+
+	lda #(DATA | HIGH | TICK)
 	sta PORTB
 
 	; DB4
