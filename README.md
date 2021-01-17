@@ -1,6 +1,6 @@
-# 6502-kit
+# 6502 Flappy Bird
 
-A repo with tools for building programs that run on the MOS 6502/6510 and WDC 65c02 CPUs 🕹️
+Flappy bird for the 6502 microprocessor 🐦
 
 ## Prerequisites
 
