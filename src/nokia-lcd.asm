@@ -22,21 +22,7 @@ main:
 	lda #DISABLED
 	sta PORTB
 
-	; LcdWrite(LCD_C, 0x21 );  // LCD Extended Commands. %00100001
-	; LcdWrite(LCD_C, 0xB5 );  // Set LCD Vop (Contrast). %10110101
-	; LcdWrite(LCD_C, 0x14 );  // LCD bias mode 1:48. %00010100
-	; LcdWrite(LCD_C, 0x20 );  // LCD Basic Commands. %00100001
-	; LcdWrite(LCD_C, 0x0C );  // Display control. %00001100
-
-	; LcdWrite(LCD_D, 0xFF);
-	; LcdWrite(LCD_D, 0xF0);
-	; LcdWrite(LCD_D, 0x0F);
-
-
-
-
-
-
+setup:
 	; COMMAND %00100001 (Extended Instruction Set)
 
 	lda #(COMMAND | DISABLED)
@@ -392,10 +378,86 @@ main:
 	lda #(COMMAND | DISABLED)
 	sta PORTB
 
+clear:
+	ldx #255
+	ldy #2
 
+clear_loop:
+	; DATA
 
+	lda #(DATA | DISABLED)
+	sta PORTB
 
+	lda #(DATA)
+	sta PORTB
 
+	; DB7
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	; DB6
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	; DB5
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	; DB4
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	; DB3
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	; DB2
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	; DB1
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	; DB0
+	lda #(DATA | LOW)
+	sta PORTB
+
+	lda #(DATA | LOW | TICK)
+	sta PORTB
+
+	lda #(DATA | DISABLED)
+	sta PORTB
+
+	dex
+	bne clear_loop
+
+	ldx #255
+	dey
+	bne clear_loop
+
+draw:
 
 	; DATA
 
