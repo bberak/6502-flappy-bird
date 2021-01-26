@@ -14,523 +14,30 @@ HIGH      = %01000000
 LOW       = %00000000
 TICK	  = %10000000
 
+;///////////////////////////////////////////////////////////////////////
+
 main:
 	; Set stack pointer to address 01ff
  	ldx #$ff 		
  	txs
 
 	jsr lcd_init
+	jsr lcd_clear
 
-setup:
-	; Extended Instruction Set
-	lda #%00100001
-	jsr lcd_command
+main_loop:
+	lda #%11110000
+	jsr lcd_data
 
-	; COMMAND %10110101 (Contrast)
+	jsr delay
 
-	lda #(COMMAND | DISABLED)
-	sta PORTB
+	lda #%00001111
+	jsr lcd_data
 
-	lda #(COMMAND)
-	sta PORTB
-
-	; DB7
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB2
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB1
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB0
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-
-
-
-
-
-	; COMMAND %00010100 (Bias)
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-	lda #(COMMAND)
-	sta PORTB
-
-	; DB7
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB2
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB1
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB0
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-
-
-
-
-
-	; COMMAND %00100000 (Basic Instruction Set)
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-	lda #(COMMAND)
-	sta PORTB
-
-	; DB7
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB2 (PD)
-	lda #(COMMAND | LOW) 
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB1 (V)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB0 (H)
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-
-
-
-
-
-	; COMMAND %00001100 (Display Control)
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-	lda #(COMMAND)
-	sta PORTB
-
-	; DB7
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB2
-	lda #(COMMAND | HIGH)
-	sta PORTB
-
-	lda #(COMMAND | HIGH | TICK)
-	sta PORTB
-
-	; DB1
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	; DB0
-	lda #(COMMAND | LOW)
-	sta PORTB
-
-	lda #(COMMAND | LOW | TICK)
-	sta PORTB
-
-	lda #(COMMAND | DISABLED)
-	sta PORTB
-
-clear:
-	ldx #255
-	ldy #2
-
-clear_loop:
-	; DATA
-
-	lda #(DATA | DISABLED)
-	sta PORTB
-
-	lda #(DATA)
-	sta PORTB
-
-	; DB7
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	; DB2
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	; DB1
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	; DB0
-	lda #(DATA | LOW)
-	sta PORTB
-
-	lda #(DATA | LOW | TICK)
-	sta PORTB
-
-	lda #(DATA | DISABLED)
-	sta PORTB
-
-	dex
-	bne clear_loop
-
-	ldx #255
-	dey
-	bne clear_loop
-
-draw:
-
-	; DATA
-
-	lda #(DATA | DISABLED)
-	sta PORTB
-
-	lda #(DATA)
-	sta PORTB
-
-	; DB7
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB2
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB1
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB0
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	lda #(DATA | DISABLED)
-	sta PORTB
-
-
-
-
-
-
-	; DATA
-
-	lda #(DATA | DISABLED)
-	sta PORTB
-
-	lda #(DATA)
-	sta PORTB
-
-	; DB7
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB6
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB5
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB4
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB3
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB2
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB1
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	; DB0
-	lda #(DATA | HIGH)
-	sta PORTB
-
-	lda #(DATA | HIGH | TICK)
-	sta PORTB
-
-	lda #(DATA | DISABLED)
-	sta PORTB
+	jsr delay
 	
-loop:
-	jmp loop	
+	jmp main_loop
+
+;///////////////////////////////////////////////////////////////////////
 
 lcd_init:
 	; Set all pins of port B to output
@@ -540,7 +47,61 @@ lcd_init:
 	lda #DISABLED
 	sta PORTB
 
+	; Extended instruction set
+	lda #%00100001
+	jsr lcd_command
+
+	; Contrast
+	lda #%10110101
+	jsr lcd_command
+
+	; Bias
+	lda #%00010100
+	jsr lcd_command
+
+	; Basic nstruction Set
+	lda #%00100000
+	jsr lcd_command
+
+	; Display control
+	lda #%00001100
+	jsr lcd_command
+
 	rts
+
+;///////////////////////////////////////////////////////////////////////
+
+lcd_clear:
+	pha
+	phx
+	phy
+
+	; Perform a total of 504 (6 x 84) data write operations
+	; to clear the entire lcd screen
+	ldx #255
+	ldy #249
+
+lcd_clear_loop_x:
+	lda #0
+	jsr lcd_data
+
+	dex
+	bne lcd_clear_loop_x
+
+lcd_clear_loop_y:
+	lda #0
+	jsr lcd_data	
+
+	dey
+	bne lcd_clear_loop_y
+
+	ply
+	plx
+	pla
+
+	rts
+
+;///////////////////////////////////////////////////////////////////////
 
 lcd_command:
 	phx
@@ -586,6 +147,74 @@ lcd_command_loop_break:
 	plx
 
 	rts
+
+;///////////////////////////////////////////////////////////////////////
+
+lcd_data:
+	phx
+	phy
+
+	ldx #(DATA | DISABLED)
+	stx PORTB
+
+	ldx #(DATA)
+	stx PORTB
+
+	clc
+	ldy #8
+
+lcd_data_loop:
+	rol
+	bcs lcd_data_loop_high
+
+lcd_data_loop_low:
+	ldx #(DATA | LOW)
+	stx PORTB
+
+	ldx #(DATA | LOW | TICK)
+	stx PORTB
+
+	jmp lcd_data_loop_break
+
+lcd_data_loop_high:
+	ldx #(DATA | HIGH)
+	stx PORTB
+
+	ldx #(DATA | HIGH | TICK)
+	stx PORTB
+
+lcd_data_loop_break:
+	dey
+	bne lcd_data_loop
+
+	ldx #(DATA | DISABLED)
+	stx PORTB
+
+	ply
+	plx
+
+	rts
+
+;///////////////////////////////////////////////////////////////////////
+
+delay:
+ phx
+ phy
+ ldx #255
+ ldy #40
+
+delay_loop:
+ dex
+ bne delay_loop
+ dey 
+ bne delay_loop
+
+ ply 
+ plx
+
+ rts
+
+ ;///////////////////////////////////////////////////////////////////////
 
 *=$fffc
 
