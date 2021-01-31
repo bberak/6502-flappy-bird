@@ -28,8 +28,6 @@ main_loop:
 	lda #%11110000
 	jsr lcd_data
 
-	jsr delay
-
 	lda #%00001111
 	jsr lcd_data
 
