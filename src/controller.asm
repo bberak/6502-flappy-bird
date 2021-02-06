@@ -1,7 +1,5 @@
 !to "build/controller.bin"
 
-*=$8000
-
 PORTB = $6000
 PORTA = $6001
 DDRB  = $6002
@@ -19,23 +17,25 @@ LEFT	  = %00000010
 UP		  = %00000100	
 RIGHT	  = %00001000	
 A  		  = %00010000
-B 		  = %00100000	
+B 		  = %00100000
 
-controller = $0200
+var_controller = $0200
 
-controller_down_active	 = $0201
-controller_left_active   = $0202
-controller_up_active     = $0203
-controller_right_active  = $0204
-controller_a_active      = $0205
-controller_b_active      = $0206
+var_controller_down_active	 = $0201
+var_controller_left_active   = $0202
+var_controller_up_active     = $0203
+var_controller_right_active  = $0204
+var_controller_a_active      = $0205
+var_controller_b_active      = $0206
 
-controller_down_pressed  = $0207
-controller_left_pressed  = $0208
-controller_up_pressed    = $0209
-controller_right_pressed = $020a
-controller_a_pressed  	 = $020b
-controller_b_pressed     = $020c
+var_controller_down_pressed  = $0207
+var_controller_left_pressed  = $0208
+var_controller_up_pressed    = $0209
+var_controller_right_pressed = $020a
+var_controller_a_pressed  	 = $020b
+var_controller_b_pressed     = $020c
+
+*=$8000
 
 ;///////////////////////////////////////////////////////////////////////
 
@@ -55,29 +55,46 @@ main_loop:
 	lda #%10000000
 	jsr lcd_command
 
-main_loop_draw_down:
-	lda controller_down_active
-	bne main_loop_down_is_active
+	; Draw down button
+	lda var_controller_down_active
+	jsr draw_button
+
+	; Draw left button
+	lda var_controller_left_active
+	jsr draw_button
+
+	; Draw up button
+	lda var_controller_up_active
+	jsr draw_button
+
+	; Draw right button
+	lda var_controller_right_active
+	jsr draw_button
+
+	; Draw a button
+	lda var_controller_a_active
+	jsr draw_button
+
+	; Draw b button
+	lda var_controller_b_active
+	jsr draw_button
+
+	jmp main_loop
+
+;///////////////////////////////////////////////////////////////////////
+
+draw_button:
+	bne draw_button_active
 	lda #0
 	jsr lcd_data
-	jmp main_loop_draw_left
+	jmp draw_button_break
 
-main_loop_down_is_active:
+draw_button_active:
 	lda #255
 	jsr lcd_data
 
-main_loop_draw_left:
-	lda controller_left_active
-	bne main_loop_left_is_active
-	lda #0
-	jsr lcd_data
-	jmp main_loop
-
-main_loop_left_is_active:
-	lda #255
-	jsr lcd_data	
-	
-	jmp main_loop
+draw_button_break:
+	rts
 
 ;///////////////////////////////////////////////////////////////////////
 
@@ -88,40 +105,145 @@ controller_init:
 	lda #%00000000
 	sta DDRA
 
+	; Clear controller variables
+	sta var_controller
+	sta var_controller_down_active
+	sta var_controller_left_active
+	sta var_controller_up_active
+	sta var_controller_right_active
+	sta var_controller_a_active
+	sta var_controller_b_active
+	sta var_controller_down_pressed
+	sta var_controller_left_pressed
+	sta var_controller_up_pressed
+	sta var_controller_right_pressed
+	sta var_controller_a_pressed
+	sta var_controller_b_pressed
+
 	pla
 
 	rts
 
+;///////////////////////////////////////////////////////////////////////
+
 controller_read:
 	pha
-	phx 
+	phx
+	phy
 
+	; Store current controller state in x register
 	ldx PORTA
+
+	; Store previous controller state in y register
+	ldy var_controller
 
 	txa
 	and #DOWN
-	sta controller_down_active
+	sta var_controller_down_active
 
 	txa
 	and #LEFT
-	sta controller_left_active
+	sta var_controller_left_active
 
 	txa
 	and #UP
-	sta controller_up_active
+	sta var_controller_up_active
 
 	txa
 	and #RIGHT
-	sta controller_right_active
+	sta var_controller_right_active
 
 	txa
 	and #A
-	sta controller_a_active
+	sta var_controller_a_active
 
 	txa
 	and #B
-	sta controller_b_active
+	sta var_controller_b_active
 
+controller_read_down_pressed:
+	tya
+	and #DOWN
+	bne controller_read_down_not_pressed 
+	lda var_controller_down_active
+	beq controller_read_down_not_pressed
+	sta var_controller_down_pressed
+	jmp controller_read_left_pressed
+
+controller_read_down_not_pressed:
+	lda #0
+	sta var_controller_down_pressed
+
+controller_read_left_pressed:
+	tya
+	and #LEFT
+	bne controller_read_left_not_pressed 
+	lda var_controller_left_active
+	beq controller_read_left_not_pressed
+	sta var_controller_left_pressed
+	jmp controller_read_up_pressed
+
+controller_read_left_not_pressed:
+	lda #0
+	sta var_controller_left_pressed
+
+controller_read_up_pressed:
+	tya
+	and #UP
+	bne controller_read_up_not_pressed 
+	lda var_controller_up_active
+	beq controller_read_up_not_pressed
+	sta var_controller_up_pressed
+	jmp controller_read_right_pressed
+
+controller_read_up_not_pressed:
+	lda #0
+	sta var_controller_up_pressed
+
+controller_read_right_pressed:
+	tya
+	and #RIGHT
+	bne controller_read_right_not_pressed 
+	lda var_controller_right_active
+	beq controller_read_right_not_pressed
+	sta var_controller_right_pressed
+	jmp controller_read_a_pressed
+
+controller_read_right_not_pressed:
+	lda #0
+	sta var_controller_right_pressed
+
+controller_read_a_pressed:
+	tya
+	and #A
+	bne controller_read_a_not_pressed 
+	lda var_controller_a_active
+	beq controller_read_a_not_pressed
+	sta var_controller_a_pressed
+	jmp controller_read_b_pressed
+
+controller_read_a_not_pressed:
+	lda #0
+	sta var_controller_a_pressed
+
+controller_read_b_pressed:
+	tya
+	and #B
+	bne controller_read_b_not_pressed 
+	lda var_controller_b_active
+	beq controller_read_b_not_pressed
+	sta var_controller_b_pressed
+	jmp controller_read_break
+
+controller_read_b_not_pressed:
+	lda #0
+	sta var_controller_b_pressed
+
+controller_read_break:
+	; Save current controller state
+	stx var_controller
+
+	ply
 	plx
 	pla
 
