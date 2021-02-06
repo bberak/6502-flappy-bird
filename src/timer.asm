@@ -1,9 +1,15 @@
-!to "build/controller.bin"
+!to "build/timer.bin"
 
 PORTB = $6000
 PORTA = $6001
 DDRB  = $6002
 DDRA  = $6003
+T1_LC = $6004
+T1_HC = $6005
+ACR   = $600b
+PCR   = $600c
+IFR   = $600d
+IER   = $600e
 
 DISABLED  = %00010000
 DATA      = %00100000
@@ -53,6 +59,7 @@ main:
  	jsr controller_init
 	jsr lcd_init
 	jsr lcd_clear
+	jsr timer_init
 
 main_loop:
 	jsr controller_read
@@ -100,6 +107,40 @@ main_loop:
 	jsr draw_row
 
 	jmp main_loop
+
+;///////////////////////////////////////////////////////////////////////
+
+timer_init:
+	pha
+
+	; Enable interrupts for timer 1
+	;lda #%11000000
+	;sta IER
+
+	; Countinuous timer interrupts (intervals)
+	;lda #%11000000
+	;sta ACR
+
+	; Load timer 1 with $ffff to initiate countdown
+	;lda #$ff
+	;sta T1_LC
+	;sta T1_HC
+
+	; Enable interrupts
+	cli 
+
+	pla
+
+	rts
+
+;///////////////////////////////////////////////////////////////////////
+
+irq:
+	; Clear the interrupt by reading low order timer count
+	; This will cause the 65c22 to set the irqb pin high
+	bit T1_LC 
+
+ 	rti
 
 ;///////////////////////////////////////////////////////////////////////
 
@@ -498,4 +539,4 @@ delay_loop:
 *=$fffc
 
 !word main
-!word $0000
+!word irq
