@@ -19,6 +19,9 @@ RIGHT	  = %00001000
 A  		  = %00010000
 B 		  = %00100000
 
+ROWS 	  = 84;
+COLS      = 48;
+
 var_controller = $0200
 
 var_controller_down_active	 = $0201
@@ -34,6 +37,9 @@ var_controller_up_pressed    = $0209
 var_controller_right_pressed = $020a
 var_controller_a_pressed  	 = $020b
 var_controller_b_pressed     = $020c
+
+var_draw_row_y 				 = $020d
+var_draw_row_data			 = $020e
 
 *=$8000
 
@@ -51,49 +57,88 @@ main:
 main_loop:
 	jsr controller_read
 
-	; Set lcd x address to zero
-	lda #%10000000
-	jsr lcd_command
-
-	; Draw down button
+	; Draw button down state
+	lda #0
+	sta var_draw_row_y
 	lda var_controller_down_active
-	jsr draw_button
+	sta var_draw_row_data
+	jsr draw_row
 
-	; Draw left button
+	; Draw button left state
+	lda #1
+	sta var_draw_row_y
 	lda var_controller_left_active
-	jsr draw_button
+	sta var_draw_row_data
+	jsr draw_row
 
-	; Draw up button
+	; Draw button up state
+	lda #2
+	sta var_draw_row_y
 	lda var_controller_up_active
-	jsr draw_button
+	sta var_draw_row_data
+	jsr draw_row
 
-	; Draw right button
+	; Draw button right state
+	lda #3
+	sta var_draw_row_y
 	lda var_controller_right_active
-	jsr draw_button
+	sta var_draw_row_data
+	jsr draw_row
 
-	; Draw a button
+	; Draw button a state
+	lda #4
+	sta var_draw_row_y
 	lda var_controller_a_active
-	jsr draw_button
+	sta var_draw_row_data
+	jsr draw_row
 
-	; Draw b button
+	; Draw button b state
+	lda #5
+	sta var_draw_row_y
 	lda var_controller_b_active
-	jsr draw_button
+	sta var_draw_row_data
+	jsr draw_row
 
 	jmp main_loop
 
 ;///////////////////////////////////////////////////////////////////////
 
-draw_button:
-	bne draw_button_active
-	lda #0
-	jsr lcd_data
-	jmp draw_button_break
+draw_row:
+	pha
+	phy
+	clc
 
-draw_button_active:
+	; Set lcd x address to zero
+	lda #%10000000
+	jsr lcd_command
+
+	; Select lcd y address
+	lda #%01000000
+	adc var_draw_row_y
+	jsr lcd_command
+
+	lda var_draw_row_data
+	ldy #ROWS
+
+draw_row_loop:
+	beq draw_row_break
+	jsr lcd_data
+	dey
+	jmp draw_row_loop
+
+draw_row_break:
+	ply
+	pla
+
+	rts
+
+;///////////////////////////////////////////////////////////////////////
+
+fill_acc_if_not_zero:
+	beq fill_acc_if_not_zero_break
 	lda #255
-	jsr lcd_data
 
-draw_button_break:
+fill_acc_if_not_zero_break:
 	rts
 
 ;///////////////////////////////////////////////////////////////////////
@@ -139,26 +184,32 @@ controller_read:
 
 	txa
 	and #DOWN
+	jsr fill_acc_if_not_zero
 	sta var_controller_down_active
 
 	txa
 	and #LEFT
+	jsr fill_acc_if_not_zero
 	sta var_controller_left_active
 
 	txa
 	and #UP
+	jsr fill_acc_if_not_zero
 	sta var_controller_up_active
 
 	txa
 	and #RIGHT
+	jsr fill_acc_if_not_zero
 	sta var_controller_right_active
 
 	txa
 	and #A
+	jsr fill_acc_if_not_zero
 	sta var_controller_a_active
 
 	txa
 	and #B
+	jsr fill_acc_if_not_zero
 	sta var_controller_b_active
 
 controller_read_down_pressed:
@@ -320,6 +371,7 @@ lcd_clear_loop_y:
 ;///////////////////////////////////////////////////////////////////////
 
 lcd_command:
+	pha
 	phx
 	phy
 
@@ -361,12 +413,14 @@ lcd_command_loop_break:
 
 	ply
 	plx
+	pla
 
 	rts
 
 ;///////////////////////////////////////////////////////////////////////
 
 lcd_data:
+    pha
 	phx
 	phy
 
@@ -408,6 +462,7 @@ lcd_data_loop_break:
 
 	ply
 	plx
+	pla
 
 	rts
 
