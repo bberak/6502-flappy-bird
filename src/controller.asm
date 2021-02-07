@@ -1,9 +1,15 @@
-!to "build/controller.bin"
+!to "build/timer.bin"
 
 PORTB = $6000
 PORTA = $6001
 DDRB  = $6002
 DDRA  = $6003
+T1_LC = $6004
+T1_HC = $6005
+ACR   = $600b
+PCR   = $600c
+IFR   = $600d
+IER   = $600e
 
 DISABLED  = %00010000
 DATA      = %00100000
@@ -40,6 +46,9 @@ var_controller_b_pressed     = $020c
 
 var_draw_row_y 				 = $020d
 var_draw_row_data			 = $020e
+
+var_counter 				 = $020f
+var_counter_draw_data		 = $0212
 
 *=$8000
 
@@ -100,6 +109,66 @@ main_loop:
 	jsr draw_row
 
 	jmp main_loop
+
+;///////////////////////////////////////////////////////////////////////
+
+timer_init:
+	pha
+
+	; Enable interrupts for timer 1
+	lda #%11000000
+	sta IER
+
+	; Countinuous timer interrupts (intervals)
+	lda #%01000000
+	sta ACR
+
+	; Load timer 1 with $ffff to initiate countdown
+	lda #$ff
+	sta T1_LC
+	sta T1_HC
+
+	; Enable interrupts
+	cli 
+
+	pla
+
+	rts
+
+;///////////////////////////////////////////////////////////////////////
+
+irq:
+	lda var_counter_draw_data
+	jsr lcd_data
+
+	inc var_counter
+	bne irq_check_counter
+	inc var_counter + 1
+
+irq_check_counter:	
+	lda var_counter
+	cmp #<(ROWS * COLS)
+	bne irq_break
+	lda var_counter + 1
+	cmp #>(ROWS * COLS)
+	bne irq_break
+
+	; Reset counter
+	lda #0
+	sta var_counter
+	sta var_counter + 1
+
+	; Invert draw data
+	lda var_counter_draw_data
+	eor #%11111111
+	sta var_counter_draw_data
+
+irq_break:
+	; Clear the interrupt by reading low order timer count
+	; This will cause the 65c22 to set the irqb pin high
+	bit T1_LC 
+
+ 	rti
 
 ;///////////////////////////////////////////////////////////////////////
 
@@ -498,4 +567,4 @@ delay_loop:
 *=$fffc
 
 !word main
-!word $0000
+!word irq
