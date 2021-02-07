@@ -19,8 +19,8 @@ RIGHT	  = %00001000
 A  		  = %00010000
 B 		  = %00100000
 
-ROWS 	  = 84;
-COLS      = 48;
+ROWS 	  = 6;
+COLS      = 84;
 
 var_controller = $0200
 
@@ -118,7 +118,7 @@ draw_row:
 	jsr lcd_command
 
 	lda var_draw_row_data
-	ldy #ROWS
+	ldy #COLS
 
 draw_row_loop:
 	beq draw_row_break

@@ -25,8 +25,8 @@ RIGHT	  = %00001000
 A  		  = %00010000
 B 		  = %00100000
 
-ROWS 	  = 84;
-COLS      = 48;
+ROWS 	  = 6;
+COLS      = 84;
 
 var_controller = $0200
 
@@ -47,6 +47,9 @@ var_controller_b_pressed     = $020c
 var_draw_row_y 				 = $020d
 var_draw_row_data			 = $020e
 
+var_counter 				 = $020f
+var_counter_draw_data		 = $0212
+
 *=$8000
 
 ;///////////////////////////////////////////////////////////////////////
@@ -61,51 +64,14 @@ main:
 	jsr lcd_clear
 	jsr timer_init
 
-main_loop:
-	jsr controller_read
-
-	; Draw button down state
 	lda #0
-	sta var_draw_row_y
-	lda var_controller_down_active
-	sta var_draw_row_data
-	jsr draw_row
+	sta var_counter
+	sta var_counter + 1
 
-	; Draw button left state
-	lda #1
-	sta var_draw_row_y
-	lda var_controller_left_active
-	sta var_draw_row_data
-	jsr draw_row
+	lda #255
+	sta var_counter_draw_data
 
-	; Draw button up state
-	lda #2
-	sta var_draw_row_y
-	lda var_controller_up_active
-	sta var_draw_row_data
-	jsr draw_row
-
-	; Draw button right state
-	lda #3
-	sta var_draw_row_y
-	lda var_controller_right_active
-	sta var_draw_row_data
-	jsr draw_row
-
-	; Draw button a state
-	lda #4
-	sta var_draw_row_y
-	lda var_controller_a_active
-	sta var_draw_row_data
-	jsr draw_row
-
-	; Draw button b state
-	lda #5
-	sta var_draw_row_y
-	lda var_controller_b_active
-	sta var_draw_row_data
-	jsr draw_row
-
+main_loop:
 	jmp main_loop
 
 ;///////////////////////////////////////////////////////////////////////
@@ -114,17 +80,17 @@ timer_init:
 	pha
 
 	; Enable interrupts for timer 1
-	;lda #%11000000
-	;sta IER
+	lda #%11000000
+	sta IER
 
 	; Countinuous timer interrupts (intervals)
-	;lda #%11000000
-	;sta ACR
+	lda #%01000000
+	sta ACR
 
 	; Load timer 1 with $ffff to initiate countdown
-	;lda #$ff
-	;sta T1_LC
-	;sta T1_HC
+	lda #$ff
+	sta T1_LC
+	sta T1_HC
 
 	; Enable interrupts
 	cli 
@@ -136,6 +102,32 @@ timer_init:
 ;///////////////////////////////////////////////////////////////////////
 
 irq:
+	lda var_counter_draw_data
+	jsr lcd_data
+
+	inc var_counter
+	bne irq_check_counter
+	inc var_counter + 1
+
+irq_check_counter:	
+	lda var_counter
+	cmp #<(ROWS * COLS)
+	bne irq_break
+	lda var_counter + 1
+	cmp #>(ROWS * COLS)
+	bne irq_break
+
+	; Reset counter
+	lda #0
+	sta var_counter
+	sta var_counter + 1
+
+	; Invert draw data
+	lda var_counter_draw_data
+	eor #%11111111
+	sta var_counter_draw_data
+
+irq_break:
 	; Clear the interrupt by reading low order timer count
 	; This will cause the 65c22 to set the irqb pin high
 	bit T1_LC 
@@ -159,7 +151,7 @@ draw_row:
 	jsr lcd_command
 
 	lda var_draw_row_data
-	ldy #ROWS
+	ldy #COLS
 
 draw_row_loop:
 	beq draw_row_break
